@@ -1,3 +1,25 @@
+import http.server
+import os
+import threading
+
+
+class SimpleHandler(http.server.BaseHTTPRequestHandler):
+
+  def do_GET(self):
+    self.send_response(200)
+    self.end_headers()
+    self.wfile.write(b"Bot is alive!")
+
+
+def run_server():
+  port = int(os.environ.get("PORT", 10000))
+  server = http.server.HTTPServer(("0.0.0.0", port), SimpleHandler)
+  server.serve_forever()
+
+
+threading.Thread(target=run_server, daemon=True).start()
+
+
 import json
 import os
 import random
