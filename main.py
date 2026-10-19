@@ -1,8 +1,13 @@
 import http.server
+import json
 import os
+import random
 import threading
+import discord
+from discord.ext import commands
 
 
+# --- 1. เซิร์ฟเวอร์จำลองสำหรับ Render Web Service ---
 class SimpleHandler(http.server.BaseHTTPRequestHandler):
 
   def do_GET(self):
@@ -18,6 +23,50 @@ def run_server():
 
 
 threading.Thread(target=run_server, daemon=True).start()
+
+# --- 2. โค้ดตั้งค่าบอท Discord ---
+intents = discord.Intents.default()
+intents.message_content = True
+
+bot = commands.Bot(command_prefix="!", intents=intents)
+
+# --- 3. ระบบจัดการชิป (Economy System) ---
+DATA_FILE = "economy.json"
+
+
+def load_data():
+  if os.path.exists(DATA_FILE):
+    with open(DATA_FILE, "r", encoding="utf-8") as f:
+      return json.load(f)
+  return {}
+
+
+def save_data(data):
+  with open(DATA_FILE, "w", encoding="utf-8") as f:
+    json.dump(data, f, indent=4)
+
+
+def get_chips(user_id):
+  data = load_data()
+  str_id = str(user_id)
+  if str_id not in data:
+    data[str_id] = 1000  # แจกชิปเริ่มต้น 1,000 ชิป
+    save_data(data)
+  return data[str_id]
+
+
+def add_chips(user_id, amount):
+  data = load_data()
+  str_id = str(user_id)
+  if str_id not in data:
+    data[str_id] = 1000
+  data[str_id] += amount
+  save_data(data)
+
+
+# --- 4. รันบอทด้วย Token ---
+TOKEN = "MTU2MTgwOTEwNDcwNjQ3Mzk5NA.GlOEJ5.-5rPS4_mxZYtlqchfDT6k2O-cpcWNmqkzTRX2I"
+bot.run(TOKEN)
 
 
 import json
