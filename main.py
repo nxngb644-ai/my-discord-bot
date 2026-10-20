@@ -65,7 +65,7 @@ def add_chips(user_id, amount):
 
 
 # --- 4. รันบอทด้วย Token ---
-TOKEN = "MTU2MTgwOTEwNDcwNjQ3Mzk5NA.Gl4dbp.au0I6sZlHhSRKNovAWCWlF3bf2Ko-rE7GcvuCo"
+TOKEN = "DISCORD_TOKEN"
 bot.run(TOKEN)
 
 
@@ -376,4 +376,7 @@ async def on_ready():
 
 
 # 🔑 ใส่ Token ของบอทคุณตรงนี้ (ครอบด้วยเครื่องหมายคำพูด "")
-bot.run("MTU2MTgwOTEwNDcwNjQ3Mzk5NA.Gl4dbp.au0I6sZlHhSRKNovAWCWlF3bf2Ko-rE7GcvuCo")
+import os
+
+bot.run(os.environ.get("DISCORD_TOKEN"))
+
